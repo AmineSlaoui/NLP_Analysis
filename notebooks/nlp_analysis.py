@@ -108,14 +108,14 @@ def get_top_words_kmeans(cluster_centers, feature_names, n_top_words=5):
 
 
 # Process text
-data = pd.read_csv("NLP_Analysis/data/metadata.csv", nrows = 1000)
+data = pd.read_csv("data/metadata.csv", nrows = 1000)
 data["processed_abstract"] = data["abstract"].apply(process_text)
-data.to_csv("NLP_Analysis/data/cleaned_data.csv", index = False)
+data.to_csv("data/cleaned_data.csv", index = False)
 
 columns_to_drop = ['cord_uid', 'sha', 'source_x', 'WHO #Covidence', 'has_pdf_parse', 'has_pmc_xml_parse', 'full_text_file', 'doi', 'pmcid', 'pubmed_id', 'license', 'journal', 'Microsoft Academic Paper ID', 'url']
 cleaned_data = data.drop(columns=columns_to_drop) 
-print("CLEANED DATA: ", cleaned_data.head())
-cleaned_data.to_csv("NLP_Analysis/data/cleaned_data.csv", index = False)
+
+cleaned_data.to_csv("data/cleaned_data.csv", index = False)
 
 data = cleaned_data
 
@@ -127,7 +127,7 @@ words_df = words_df.sort_values(by='Frequency', ascending=False)
 words_df = words_df.head(20)
 
 data['processed_abstract_str'] = data['processed_abstract'].apply(lambda x: ' '.join(x))
-data.to_csv("NLP_Analysis/data/cleaned_data.csv")
+data.to_csv("data/cleaned_data.csv")
 
 
 ## LDA MODEL
@@ -197,7 +197,7 @@ for i in range(3):
 
 
 plt.subplots_adjust(wspace=0.5, hspace=0.5)
-# plt.show()
+plt.show()
 
 
 
