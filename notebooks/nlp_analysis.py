@@ -4,7 +4,7 @@ TODO:
 - Analyze and visualize abstracts data
     - Word Frequency Analysis: Determine the most common terms in the abstracts. X
     - Topic Modeling: Identify the main topics discussed in these articles. X
-    - Use TF-IDF to measure how important a term is within a document relative to all other docs
+    - Use TF-IDF to measure how important a term is within a document relative to all other docs X
     - Sentiment Analysis: Analyze the sentiment expressed in the abstracts.
 
 - For Topic Modeling need to:
@@ -15,10 +15,8 @@ TODO:
 - For TF-IDF Modeling need to:
     - Implement TF-IDF Vectorization X 
     - Cluster documents into topics with K-Means X
-    - Compare results with LDA model
-    - Visualize 
-
-    
+    - Compare results with LDA model X
+    - Visualize X
 """
 
 """
@@ -111,8 +109,15 @@ def get_top_words_kmeans(cluster_centers, feature_names, n_top_words=5):
 
 # Process text
 data = pd.read_csv("NLP_Analysis/data/metadata.csv", nrows = 1000)
-data["processed_abstract"] = data["abstract"].apply(process_text) 
+data["processed_abstract"] = data["abstract"].apply(process_text)
 data.to_csv("NLP_Analysis/data/cleaned_data.csv", index = False)
+
+columns_to_drop = ['cord_uid', 'sha', 'source_x', 'WHO #Covidence', 'has_pdf_parse', 'has_pmc_xml_parse', 'full_text_file', 'doi', 'pmcid', 'pubmed_id', 'license', 'journal', 'Microsoft Academic Paper ID', 'url']
+cleaned_data = data.drop(columns=columns_to_drop) 
+print("CLEANED DATA: ", cleaned_data.head())
+cleaned_data.to_csv("NLP_Analysis/data/cleaned_data.csv", index = False)
+
+data = cleaned_data
 
 mostcommon_words = common_word()
 
@@ -170,16 +175,17 @@ for i, words in enumerate(tfidf_top_words):
 ## Visualization
 
 # Plot most frequent words used in abstract
-# plt.figure(figsize=(12, 6))
-# sns.barplot(x='Frequency', y='Word', data= words_df, palette='rocket', hue='Word')
-# plt.title('Top 20 Most Frequent Words')
-# plt.xlabel('Frequency')
-# plt.ylabel('Words')
-# plt.show()
+plt.figure(figsize=(12, 6))
+sns.barplot(x='Frequency', y='Word', data= words_df, palette='rocket', hue='Word')
+plt.title('Top 20 Most Frequent Words')
+plt.xlabel('Frequency')
+plt.ylabel('Words')
 
 # Plot comparison chart between LDA and TFIDF models
 fig, axes = plt.subplots(3, 2, figsize=(15, 18))
 
+
+# Show rank of importance using 1 to 5 scale
 for i in range(3):  
     # LDA topics
     axes[i, 0].barh(lda_top_words[i][::-1], range(1, 6))
@@ -189,8 +195,9 @@ for i in range(3):
     axes[i, 1].barh(tfidf_top_words[i][::-1], range(1, 6))
     axes[i, 1].set_title(f"TF-IDF + K-Means Topic {i + 1}")
 
-# plt.subplots_adjust()
-plt.show()
+
+plt.subplots_adjust(wspace=0.5, hspace=0.5)
+# plt.show()
 
 
 
